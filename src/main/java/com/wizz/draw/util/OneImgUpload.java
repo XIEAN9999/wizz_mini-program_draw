@@ -20,10 +20,8 @@ public class OneImgUpload {
 
     @Value("${web.upload-path}")
     public    String filePath ;
-    @Value("${web.swiper-maxsize}")
+    @Value("${web.file-maxsize}")
     public    int MAXSIZE ;
-    @Value("${img.domain.name}")
-    public String imgDomain;
     public  Object saveFile(MultipartFile file) throws Exception {
 
         String fileName = file.getOriginalFilename();
@@ -34,11 +32,11 @@ public class OneImgUpload {
             throw new Exception("大小超过限制");
         }
         fileName = UUID.randomUUID() + suffixName;
+        System.out.println("新增文件："+filePath+fileName);
         File dest = new File(filePath+fileName);
         file.transferTo(dest);
         Map<String ,String> data= new HashMap<String,String>();
         data.put("name",fileName);
-        data.put("url",imgDomain+fileName);
         return data;
     }
 

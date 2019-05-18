@@ -9,6 +9,9 @@ import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wizz.draw.model.Award;
+import com.wizz.draw.model.Draw;
+import com.wizz.draw.model.DrawRecord;
+import com.wizz.draw.tag.AwardState;
 
 /**
  * @ClassName:     AwardService
@@ -20,5 +23,7 @@ import com.wizz.draw.model.Award;
 public interface AwardService {
 
     public int insert(Award award,MultipartFile pic) throws Exception;
-    public List<Award> getListByDraw(int id);
+    public Award getAwardByDraw(int id);
+    public Award getAwardById(int id);
+    public List<Award> getWinAwardByPlayer(String id);
 }

@@ -7,10 +7,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.wizz.draw.tag.DrawState;
 
 /**
- * @ClassName:     Drae
+ * @ClassName:     Draw
  * @Description:TODO(这里用一句话描述这个类的作用)
  * @author:    Android_Robot
  * @date:        2019年4月28日 下午3:41:08
@@ -19,27 +18,25 @@ import com.wizz.draw.tag.DrawState;
 public class Draw {
 
     private int id;
-    private String initiatorOpenId;
+    private String iniOpenId;
     private String theme;
     private String comName;
     private String logoId;
     private String picId;
     private Date createTime;
-    private Date startTime;
     private int playerNum;
-    private List<Award> awards;
-    private List<DrawRecord> records;
-    private DrawState state;
+    private int state; //0 准备抽奖；1 正在抽奖；2已结束
+    private Award award;
+    private Date beginTime;
     public Draw(){
-        this.records=new ArrayList<DrawRecord>();
-        this.awards=new ArrayList<Award>();
     }
    
     public Draw(String initiatorOpenId, String theme, String comName) {
         super();
-        this.initiatorOpenId = initiatorOpenId;
+        this.iniOpenId = initiatorOpenId;
         this.theme = theme;
         this.comName = comName;
+        this.createTime=new Date();
     }
 
     public int getId() {
@@ -72,12 +69,7 @@ public class Draw {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
-    public Date getStartTime() {
-        return startTime;
-    }
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
+
     public int getPlayerNum() {
         return playerNum;
     }
@@ -85,33 +77,20 @@ public class Draw {
         this.playerNum = playerNum;
     }
     
-    public List<Award> getAwards() {
-        return awards;
+  
+
+    public String getIniOpenId() {
+        return iniOpenId;
+    }
+ 
+
+    public void setPicId(String picId) {
+        this.picId = picId;
     }
 
-
-    public void setAwards(List<Award> awards) {
-        this.awards = awards;
+    public void setIniOpenId(String initiatorOpenId) {
+        this.iniOpenId = initiatorOpenId;
     }
-    
-
-    public String getInitiatorOpenId() {
-        return initiatorOpenId;
-    }
-
-
-    public void setInitiatorOpenId(String initiatorOpenId) {
-        this.initiatorOpenId = initiatorOpenId;
-    }
-
-
-    public List<DrawRecord> getRecords() {
-        return records;
-    }
-    public void setRecords(List<DrawRecord> records) {
-        this.records = records;
-    }
-    
     public String getPicId() {
         return picId;
     }
@@ -120,12 +99,32 @@ public class Draw {
         this.picId = picId;
     }
 
-    public DrawState getState() {
+    public int getState() {
         return state;
     }
 
-    public void setState(DrawState state) {
+    public void setState(int state) {
         this.state = state;
     }
+
+    public Award getAward() {
+        return award;
+    }
+
+    public void setAward(Award award) {
+        this.award = award;
+    }
+
+    public Date getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
+    }
+    
+ 
+   
+
     
 }

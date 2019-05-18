@@ -26,6 +26,7 @@ public class GlobalExceptionHandler {
         res.setStatus(-2);       
         res.setMsg("文件操作失败");       
         res.setData(e.getMessage());
+        e.printStackTrace();
         return res;
     }
     @ResponseBody
@@ -35,6 +36,7 @@ public class GlobalExceptionHandler {
         res.setStatus(-3);       
         res.setMsg("数据库操作失败");       
         res.setData(e.getMessage());
+        e.printStackTrace();
         return res;
     }
     @ResponseBody
@@ -44,6 +46,7 @@ public class GlobalExceptionHandler {
         res.setStatus(-1);       
         res.setMsg("操作失败");       
         res.setData(e.getMessage());
+        e.printStackTrace();
         return res;
     }
 }

@@ -19,9 +19,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @MapperScan("com.wizz.draw.dao")
-@ComponentScan(basePackages = {})
-   
-          //, ,"com.weizhi.gameMatching.util" "com.weizhi.gameMatching.web",
+@ComponentScan(basePackages = {"com.wizz.draw"})
 public class DrawApplication {
 
     public static void main(String[] args) {

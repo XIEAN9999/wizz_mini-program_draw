@@ -3,6 +3,10 @@
  */
 package com.wizz.draw.model;
 
+import java.util.Date;
+import java.util.List;
+
+import com.wizz.draw.tag.AwardState;
 import com.wizz.draw.tag.DrawModel;
 
 /**
@@ -22,6 +26,8 @@ public class Award {
     private String picId;
     private boolean initiatorJoin;
     private DrawModel model;
+    private List<DrawRecord> records;
+
     public Award(){
         
     }
@@ -86,7 +92,14 @@ public class Award {
     public void setModel(DrawModel model) {
         this.model = model;
     }
- 
-    
+
+    public List<DrawRecord> getRecords() {
+        return records;
+    }
+
+    public void setRecords(List<DrawRecord> records) {
+        this.records = records;
+    }
+
 
 }

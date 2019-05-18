@@ -2,12 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wizz.draw.dao.DrawDao">
 	<update id="updateGameResults">
-		update drawRecord set 
+		update draw_record set 
 		win=1
-		where player_id in
+		where id in
 		<foreach collection="list" item="r" open="(" close=")"
 			separator=",">
-			#{r.playerId}
+			#{r.id}
 		</foreach>
 	</update>
+	<insert id="insertRecords">
+	insert into draw_record(id,draw_id,award_id,player_id) values
+		<foreach collection="list" item="t" index="index" separator=",">
+			(null,#{t.drawId},#{t.awardId},#{t.playerId})			
+		</foreach>
+	</insert>	
 </mapper>

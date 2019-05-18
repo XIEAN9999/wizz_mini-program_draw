@@ -14,6 +14,7 @@ public class DrawRecord {
 
     private int id;
     private int drawId;
+    private int awardId;
     private String playerId;
     private int score;
     private boolean win;
@@ -22,8 +23,9 @@ public class DrawRecord {
     }
     
  
-    public DrawRecord(int drawId, String playerId) {
+    public DrawRecord(int awardId,int drawId, String playerId) {
         super();
+        this.awardId=awardId;
         this.drawId = drawId;
         this.playerId = playerId;
     }
@@ -59,5 +61,15 @@ public class DrawRecord {
     public void setWin(boolean win) {
         this.win = win;
     }
-   
+
+
+    public int getAwardId() {
+        return awardId;
+    }
+
+
+    public void setAwardId(int awardId) {
+        this.awardId = awardId;
+    }
+    
 }
