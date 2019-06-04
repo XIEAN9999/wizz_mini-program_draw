@@ -25,18 +25,22 @@ public class Draw {
     private String picId;
     private Date createTime;
     private int playerNum;
-    private int state; //0 准备抽奖；1 正在抽奖；2已结束
+    private int state; //0 准备抽奖；1 正在抽奖；2已结束;3已取消
     private Award award;
-    private Date beginTime;
+    private float beginTime;
+    private Date finishTime;
     public Draw(){
     }
    
-    public Draw(String initiatorOpenId, String theme, String comName) {
+    public Draw(String initiatorOpenId, String theme, String comName,String logoId,String picId,int playerNum) {
         super();
         this.iniOpenId = initiatorOpenId;
         this.theme = theme;
         this.comName = comName;
+        this.logoId=logoId;
+        this.picId=picId;
         this.createTime=new Date();
+        this.playerNum=playerNum;
     }
 
     public int getId() {
@@ -115,12 +119,20 @@ public class Draw {
         this.award = award;
     }
 
-    public Date getBeginTime() {
+    public float getBeginTime() {
         return beginTime;
     }
 
-    public void setBeginTime(Date beginTime) {
+    public void setBeginTime(float beginTime) {
         this.beginTime = beginTime;
+    }
+
+    public Date getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(Date finishTime) {
+        this.finishTime = finishTime;
     }
     
  

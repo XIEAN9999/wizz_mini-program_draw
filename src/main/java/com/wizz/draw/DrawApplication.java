@@ -6,6 +6,7 @@ package com.wizz.draw;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 
 
@@ -19,6 +20,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @MapperScan("com.wizz.draw.dao")
+@EnableCaching
 @ComponentScan(basePackages = {"com.wizz.draw"})
 public class DrawApplication {
 

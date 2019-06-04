@@ -25,18 +25,19 @@ public class Award {
     private String descrip;
     private String picId;
     private boolean initiatorJoin;
-    private DrawModel model;
+    private int model; //0:随机， 1：最高分
     private List<DrawRecord> records;
 
     public Award(){
         
     }
     
-    public Award(int drawId, String name, int num, String descrip, boolean initiatorJoin, DrawModel model) {
+    public Award(int drawId, String name,String picId, int num, String descrip, boolean initiatorJoin, int model) {
         super();
         this.drawId = drawId;
         this.name = name;
         this.num = num;
+        this.picId=picId;
         this.descrip = descrip;
         this.initiatorJoin = initiatorJoin;
         this.model = model;
@@ -86,10 +87,10 @@ public class Award {
     public void setInitiatorJoin(boolean initiatorJoin) {
         this.initiatorJoin = initiatorJoin;
     }
-    public DrawModel getModel() {
+    public int getModel() {
         return model;
     }
-    public void setModel(DrawModel model) {
+    public void setModel(int model) {
         this.model = model;
     }
 

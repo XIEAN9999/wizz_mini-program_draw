@@ -3,18 +3,18 @@
  */
 package com.wizz.draw.service.impl;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.wizz.draw.dao.AwardDao;
 import com.wizz.draw.dao.DrawDao;
@@ -22,7 +22,6 @@ import com.wizz.draw.model.Award;
 import com.wizz.draw.model.Draw;
 import com.wizz.draw.model.DrawRecord;
 import com.wizz.draw.service.DrawService;
-import com.wizz.draw.tag.AwardState;
 import com.wizz.draw.tag.DrawModel;
 import com.wizz.draw.util.OneImgUpload;
 
@@ -42,6 +41,8 @@ public class DrawServiceImpl implements DrawService {
     private AwardDao awardDao;
     @Autowired 
     private OneImgUpload imageUtil;
+    @Value("${web.upload-path}")
+    private String filePath;
     private Comparator<DrawRecord> scoreComparator;
     public DrawServiceImpl(){
         System.out.println("已创建");
@@ -55,18 +56,16 @@ public class DrawServiceImpl implements DrawService {
             }
         };
     }
+    
     @Override
-    public int insert(Draw draw,MultipartFile comPic,MultipartFile backPic) throws Exception {
-        if(comPic!=null){
-            String logoId=((Map<String,String>)imageUtil.saveFile(comPic)).get("name");
-            draw.setLogoId(logoId);;
-        }
-        if(backPic!=null){
-            String picId=((Map<String,String>)imageUtil.saveFile(backPic)).get("name");
-            draw.setPicID(picId);;
-        }
+    public int insert(Draw draw){      
         drawDao.insert(draw);
         return draw.getId();
+    }
+    @Override
+    public void insertRecord(int drawId,String playerId,String name,String url){
+        DrawRecord rec=new DrawRecord(drawId,playerId,name,url);
+        drawDao.insertRecord(rec);       
     }
     @Override
     public List<DrawRecord> getWinners(int id) {
@@ -77,14 +76,14 @@ public class DrawServiceImpl implements DrawService {
         }
         List<DrawRecord> winners=new ArrayList<DrawRecord>();
         int size=award.getNum()<records.size()?award.getNum():records.size();
-        if(award.getModel().equals(DrawModel.high_score)){
+        if(award.getModel()==1){
             Collections.sort(records, scoreComparator);
             System.out.println("排序后");
             for(DrawRecord r:records){
                 System.out.println("参与者：id"+r.getId()+" 分数:"+r.getScore());
             }
             winners.addAll(records.subList(0, size));
-        }else if(award.getModel().equals(DrawModel.random)){
+        }else if(award.getModel()==0){
             Random r=new Random();
             int random;
             for(int i=0;i<size;i++){
@@ -98,13 +97,27 @@ public class DrawServiceImpl implements DrawService {
             System.out.println("获奖：id"+r.getId()+" 分数:"+r.getScore());
         }
         drawDao.updateGameResults(winners);    
-        drawDao.updateStateById(2, award.getDrawId());
+        drawDao.updateToFinish(new Date(),award.getDrawId());
         return winners;
     }
+    
     @Override
     public List<Draw> getStartDrawsByPlayer(String id) {       
         return drawDao.getIniDrawsByPlayer(id);
     }
+    
+    @Override
+    public List<DrawRecord> getWinnersList(int drawId){
+        int model=awardDao.getAwardByDrawId(drawId).getModel();
+        return model==0?drawDao.getRModelWinnerList(drawId):drawDao.getHModelWinnerList(drawId);
+    }
+    
+    @Override
+    public List<DrawRecord> getLosersList(int drawId){
+        int model=awardDao.getAwardByDrawId(drawId).getModel();
+        return model==0?drawDao.getRModelLosersList(drawId):drawDao.getHModelLosersList(drawId);
+    }
+    
     @Override
     public List<Draw> getJoinDrawByPlayer(String id) {      
         return drawDao.getJoinDrawsByPlayer(id);
@@ -113,33 +126,76 @@ public class DrawServiceImpl implements DrawService {
     @Override
     public Draw getDrawById(int id) {      
         Draw draw= drawDao.getDrawById(id);
-        if(draw.getState()==2){               
-            System.out.println("抽奖已结束");
-            draw.setAward(awardDao.getAwardByDrawIdWithPlayer(id));
-        }else {
-            System.out.println("抽奖未结束");
-            draw.setAward(awardDao.getAwardByDrawId(id));
-        }
+        draw.setAward(awardDao.getAwardByDrawIdWithPlayer(id));
         return draw;
-    }
-    @Override
-    public void joinDraw(int drawId,String playerId) {
-        List<Integer> awards=awardDao.getAwardsIdByDrawId(drawId);
-        List<DrawRecord> recs=new ArrayList<DrawRecord>();
-        for(Integer i: awards)
-            recs.add(new DrawRecord(i,drawId,playerId));
-       drawDao.insertRecords(recs);       
-       drawDao.updatePlayerNumById(drawId);
     }
     
     @Override
-    public void updateStateById(int state,int id){
-        drawDao.updateStateById(state, id);
+    public void joinDraw(int drawId,String playerId,String name,String url) {
+        DrawRecord rec=new DrawRecord(drawId,playerId,name,url);
+        drawDao.insertRecord(rec);       
+        drawDao.updatePlayerNumById(drawId);
     }
- 
+    
+    @Override
+    public void updateState(int id,int state,long time){
+        if(state==1){
+            System.out.println(id+"更新到开始状态 ,前端时间戳:"+time);
+            drawDao.updateToStart(id,time);
+        }        
+        else if(state==2){
+            getWinners(id);
+        }
+        else if(state==3){
+            drawDao.updateToCancle(id);
+        }
+    } 
     
     @Override
     public void updateScore(int id,String uid,int score) {
         drawDao.updateScoreById(score,id,uid);        
+    }
+    
+    @Override
+    public void deleteDraw(int id) {
+        Draw draw=drawDao.getDrawById(id);
+        File pic=new File(filePath+draw.getPicId());
+        if(pic.exists()&&pic.isFile()) //删除抽奖图片
+            pic.delete();
+        pic=new File(filePath+draw.getLogoId());//删除公司logo
+        if(pic.exists()&&pic.isFile())
+            pic.delete();
+        Award award=awardDao.getAwardByDrawId(draw.getId());
+        if(award!=null){
+            pic=new File(filePath+award.getPicId());//删除奖品图片
+            if(pic.exists()&&pic.isFile())
+                pic.delete();
+        }        
+        drawDao.deleteDrawById(id);  // award 将被级联删除
+    }
+
+    @Override
+    public void deleteRecord(String userId,int drawId) {
+        drawDao.deleteRecord(userId,drawId);        
+    }
+
+    @Override
+    public void deleteWonRecord(String userId,int drawId) { 
+        drawDao.deleteWonRecord(userId,drawId);
+    }
+
+    @Override
+    public void deleteIniRecord(String userId) {
+        drawDao.deleteIniDraw(userId);
+        
+    }
+    
+    @Override
+    public int ifJoinDraw(String userId,int drawId){
+        return drawDao.getRecord(userId, drawId)!=null?1:0;
+    }
+    @Override
+    public Integer ifUpdateRecord(String userId,int drawId){
+        return drawDao.getUpdateState(userId, drawId);
     }
 }

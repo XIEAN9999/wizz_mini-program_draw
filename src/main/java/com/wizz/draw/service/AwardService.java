@@ -22,7 +22,7 @@ import com.wizz.draw.tag.AwardState;
  */
 public interface AwardService {
 
-    public int insert(Award award,MultipartFile pic) throws Exception;
+    public int insert(Award award) ;
     public Award getAwardByDraw(int id);
     public Award getAwardById(int id);
     public List<Award> getWinAwardByPlayer(String id);

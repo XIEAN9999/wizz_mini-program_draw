@@ -31,8 +31,8 @@ import com.wizz.draw.tag.AwardState;
 @Repository
 public interface AwardDao {
 
-    @Insert("insert into award(id,name,draw_id,num,descrip,pic_id,initiator_join,model,create_time) "
-            + "values(null,#{name},#{drawId},#{num},#{descrip},#{picId},#{initiatorJoin},#{model},#{createTime})" )
+    @Insert("insert into award(id,name,draw_id,num,descrip,pic_id,initiator_join,model) "
+            + "values(null,#{name},#{drawId},#{num},#{descrip},#{picId},#{initiatorJoin},#{model})" )
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     public void insert(Award award);
     
@@ -45,28 +45,17 @@ public interface AwardDao {
     public Award getAwardByDrawId(@Param("id") int id);
     //根据抽奖id获取,返回玩家信息
     @Results({
-        @Result(property="records",column="id",
-                many=@Many(select="com.wizz.draw.dao.DrawDao.getPlayersByAwardId")),
-        @Result(property="id",column="id")
+        @Result(property="records",column="draw_id",
+                many=@Many(select="com.wizz.draw.dao.DrawDao.getPlayersByDrawId")),
+        @Result(property="drawId",column="draw_id")
     })  
     @Select("select * from award where draw_id=#{id}")
     public Award getAwardByDrawIdWithPlayer(@Param("id") int id);
     
     
-    
-    @Select("select id from award where draw_id=#{id}")
-    public List<Integer> getAwardsIdByDrawId(@Param("id") int id);
-    
-    @Select("select * from award where id in (select award_id from draw_record where player_id=#{id} "
+    @Select("select * from award where draw_id in (select draw_id from draw_record where player_id=#{id} "
             + "and win=1 ) ")
     public List<Award> getWinAwardsByPlayer(@Param("id")String id);
-    
-    @Update("update award set  begin_time=#{time} where id=#{id}")
-    public void updateStartById(@Param("time") Date time,@Param("id") int id);
-    
-    @Update("update award set  where id=#{id}")
-    public void updateFinishById(@Param("id") int id);
-    
     
     
 }

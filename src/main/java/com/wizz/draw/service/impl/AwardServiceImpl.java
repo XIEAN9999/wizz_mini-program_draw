@@ -43,11 +43,7 @@ public class AwardServiceImpl implements AwardService{
     private OneImgUpload imageUtil;
    
     @Override
-    public int insert(Award award,MultipartFile pic) throws Exception {
-        if(pic!=null){
-            String picId=((Map<String,String>)imageUtil.saveFile(pic)).get("name");
-            award.setPicId(picId);;
-        }
+    public int insert(Award award) {       
         awardDao.insert(award);    
         System.out.println("新增奖品："+award.getName()+"*"+award.getNum()+";");
         return award.getId();

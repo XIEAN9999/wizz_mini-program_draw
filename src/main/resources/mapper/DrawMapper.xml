@@ -10,10 +10,4 @@
 			#{r.id}
 		</foreach>
 	</update>
-	<insert id="insertRecords">
-	insert into draw_record(id,draw_id,award_id,player_id) values
-		<foreach collection="list" item="t" index="index" separator=",">
-			(null,#{t.drawId},#{t.awardId},#{t.playerId})			
-		</foreach>
-	</insert>	
 </mapper>

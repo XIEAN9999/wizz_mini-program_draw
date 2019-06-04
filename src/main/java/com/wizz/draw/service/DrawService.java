@@ -21,12 +21,22 @@ import com.wizz.draw.model.DrawRecord;
  */
 public interface DrawService {
 
-    public int insert(Draw draw,MultipartFile comPic,MultipartFile backPic) throws Exception ;
+    public int insert(Draw draw) ;
     public List<Draw> getStartDrawsByPlayer(String id);
     public List<Draw> getJoinDrawByPlayer(String id);
     public Draw getDrawById(int id);
-    public void joinDraw(int drawId,String playerId);
-    public void updateStateById(int state,int id);
     public List<DrawRecord> getWinners(int id);
+    public List<DrawRecord> getWinnersList(int drawId);
+    public List<DrawRecord> getLosersList(int drawId);
+    public void joinDraw(int drawId,String playerId,String name,String url);
+    public void updateState(int id,int state,long time);    
     public void updateScore(int id,String uid,int score) ;
+    public void deleteDraw(int id);
+    public void deleteRecord(String userId,int drawId);
+    public void deleteWonRecord(String userId,int drawId);
+    public void deleteIniRecord(String userId);
+    public void insertRecord(int drawId, String playerId, String name, String url);
+    public int ifJoinDraw(String userId,int drawId);
+    public Integer ifUpdateRecord(String userId, int drawId);
+    
 }

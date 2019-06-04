@@ -63,9 +63,9 @@ public class HttpPoster {
         {
             System.out.println(t);           
             if(t.contains("openid"))
-                info.put("openid",t.split(":")[1].replace("\"", ""));
+                info.put("openid",t.split(":")[1].replace("\"", "").replace("}", ""));
             else if(t.contains("session_key"))
-                info.put("key",t.split(":")[1].replace("\"", ""));
+                info.put("key",t.split(":")[1].replace("\"", "").replace("}", ""));
         }
         return info;
     }

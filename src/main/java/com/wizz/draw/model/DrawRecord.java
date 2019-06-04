@@ -3,6 +3,8 @@
  */
 package com.wizz.draw.model;
 
+import java.util.Date;
+
 /**
  * @ClassName:     DrawRecord
  * @Description:TODO(这里用一句话描述这个类的作用)
@@ -14,20 +16,25 @@ public class DrawRecord {
 
     private int id;
     private int drawId;
-    private int awardId;
     private String playerId;
     private int score;
     private boolean win;
+    private String playerName;
+    private String playerPicUrl;
+    private boolean ifupdate;
+    private Date updateTime;
     public DrawRecord(){
         
     }
     
  
-    public DrawRecord(int awardId,int drawId, String playerId) {
+    public DrawRecord(int drawId, String playerId,String name,String url) {
         super();
-        this.awardId=awardId;
         this.drawId = drawId;
         this.playerId = playerId;
+        this.playerName=name;
+        this.playerPicUrl=url;
+        this.updateTime=new Date();
     }
 
     public int getId() {
@@ -63,13 +70,43 @@ public class DrawRecord {
     }
 
 
-    public int getAwardId() {
-        return awardId;
+    public String getPlayerName() {
+        return playerName;
     }
 
 
-    public void setAwardId(int awardId) {
-        this.awardId = awardId;
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+
+    public String getPlayerPicUrl() {
+        return playerPicUrl;
+    }
+
+
+    public void setPlayerPicUrl(String playerPicUrl) {
+        this.playerPicUrl = playerPicUrl;
+    }
+
+
+    public boolean isIfupdate() {
+        return ifupdate;
+    }
+
+
+    public void setIfupdate(boolean ifupdate) {
+        this.ifupdate = ifupdate;
+    }
+
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
     
 }
